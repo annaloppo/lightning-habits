@@ -413,11 +413,14 @@ body {
 
 /* ===== Reduced Motion ===== */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  .fade-in, .slide-left, .slide-right, .pop-in, .use-case, .tech-card, .roadmap-item {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
+  /* Keep lightning particles even with reduced motion */
   .fade-in, .use-case.slide-left, .use-case.slide-right,
   .why-card.scale-in, .tech-card.stagger-in,
   .roadmap-content.slide-right-rm {
