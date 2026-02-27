@@ -245,12 +245,6 @@ body {
   50% { left: 150%; }
 }
 
-/* Dynamic lightning particles */
-.lightning-bolt {
-  animation: lightningFall linear infinite !important;
-  filter: blur(0.5px);
-}
-
 /* ===== Use Cases Animations ===== */
 .use-case.slide-left {
   opacity: 0;
