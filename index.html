@@ -28,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=3">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -336,18 +336,17 @@
     <section style="background: var(--bg2); padding: 60px 0;" aria-labelledby="powered-title">
       <div class="container">
         <div class="section-title fade-in">
-          <h2 id="powered-title" style="font-size: 1.5rem; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Powered By</h2>
+          <h2 id="powered-title" style="font-size: 1.5rem;">Built With</h2>
         </div>
         <div class="powered-by fade-in">
-          <a href="https://lacrypta.ar" target="_blank" rel="noopener noreferrer" class="pw-lacrypta">
-            <img src="img/lacrypta.png" alt="La Crypta" class="pw-logo"> La Crypta
+          <a href="https://lacrypta.ar" target="_blank" rel="noopener noreferrer">
+            <span class="pw-icon" aria-hidden="true">🏛️</span> La Crypta
           </a>
-          <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener noreferrer" class="pw-openclaw">
-            <img src="img/openclaw.png" alt="OpenClaw" class="pw-logo" style="border-radius:50%"> OpenClaw
+          <a href="https://openclaw.com" target="_blank" rel="noopener noreferrer">
+            <span class="pw-icon" aria-hidden="true">🤖</span> OpenClaw
           </a>
-          <a href="https://bitcoin.org" target="_blank" rel="noopener noreferrer" class="pw-bitcoin">
-            <svg class="pw-logo-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="32" fill="#F7931A"/><text x="32" y="44" text-anchor="middle" font-size="36" font-weight="bold" fill="white" font-family="Arial, sans-serif">₿</text></svg>
-            Bitcoin
+          <a href="https://bitcoin.org" target="_blank" rel="noopener noreferrer">
+            <span class="pw-icon" aria-hidden="true">₿</span> Bitcoin
           </a>
         </div>
       </div>
@@ -364,7 +363,7 @@
   </footer>
 
   <script>
-    // Floating navbar
+    // Floating navbar — show after scrolling past hero
     const navbar = document.querySelector('.navbar');
     const hero = document.querySelector('.hero');
     const navObserver = new IntersectionObserver(([entry]) => {
@@ -372,109 +371,19 @@
     }, { threshold: 0.1 });
     navObserver.observe(hero);
 
-    // Generic scroll observer
-    function observeElements(selector, opts = {}) {
-      const els = document.querySelectorAll(selector);
-      const ob = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            if (opts.delay) {
-              const i = Array.from(els).indexOf(entry.target);
-              entry.target.style.transitionDelay = (i * (opts.delay)) + 'ms';
-            }
-            entry.target.classList.add('visible');
-            if (opts.onVisible) opts.onVisible(entry.target);
-            ob.unobserve(entry.target);
-          }
-        });
-      }, { threshold: opts.threshold || 0.1, rootMargin: opts.rootMargin || '0px 0px -40px 0px' });
-      els.forEach(el => ob.observe(el));
-    }
-
-    // Basic fade-ins (section titles, how-it-works steps)
-    observeElements('.fade-in');
-
-    // Use Cases — alternating slide directions
-    document.querySelectorAll('.use-case').forEach((card, i) => {
-      card.classList.remove('fade-in');
-      card.classList.add(i % 2 === 0 ? 'slide-left' : 'slide-right');
-    });
-    observeElements('.use-case.slide-left, .use-case.slide-right');
-
-    // Why Lightning — scale-in with stagger
-    document.querySelectorAll('.why-card').forEach(card => {
-      card.classList.remove('fade-in');
-      card.classList.add('scale-in');
-    });
-    observeElements('.why-card.scale-in', { delay: 100 });
-
-    // Why Lightning — count-up stats
-    function animateStat(el) {
-      const text = el.textContent.trim();
-      // Simple typewriter for stat text
-      el.style.opacity = '0';
-      setTimeout(() => {
-        el.style.opacity = '1';
-        el.style.transition = 'opacity 0.3s';
-      }, 200);
-    }
-    document.querySelectorAll('.why-card.scale-in').forEach(card => {
-      const stat = card.querySelector('.why-stat');
-      if (stat) {
-        const origText = stat.textContent;
-        const ob = new IntersectionObserver(([entry]) => {
-          if (entry.isIntersecting) {
-            stat.textContent = '';
-            let idx = 0;
-            const interval = setInterval(() => {
-              idx++;
-              stat.textContent = origText.substring(0, idx);
-              if (idx >= origText.length) clearInterval(interval);
-            }, 40);
-            ob.unobserve(entry.target);
-          }
-        }, { threshold: 0.3 });
-        ob.observe(card);
-      }
-    });
-
-    // Tech Stack — staggered grid
-    document.querySelectorAll('.tech-card').forEach(card => {
-      card.classList.remove('fade-in');
-      card.classList.add('stagger-in');
-    });
-    observeElements('.tech-card.stagger-in', { delay: 120 });
-
-    // Tech Stack — subtle parallax
-    const techSection = document.getElementById('tech-stack');
-    if (techSection) {
-      window.addEventListener('scroll', () => {
-        const rect = techSection.getBoundingClientRect();
-        const progress = -rect.top / window.innerHeight;
-        if (progress > -1 && progress < 2) {
-          techSection.querySelectorAll('.tech-card').forEach((card, i) => {
-            const offset = (progress * 15) * (i % 2 === 0 ? 1 : -1);
-            card.style.transform = `translateY(${card.classList.contains('visible') ? offset : 40}px)`;
-          });
+    // Scroll animations
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
         }
-      }, { passive: true });
-    }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    fadeEls.forEach(el => fadeObserver.observe(el));
 
-    // Roadmap — slide-in content cards + animated connectors
-    document.querySelectorAll('.roadmap-content').forEach(content => {
-      content.classList.add('slide-right-rm');
-    });
-    document.querySelectorAll('.roadmap-item').forEach(item => {
-      item.classList.remove('fade-in');
-    });
-    observeElements('.roadmap-item', {
-      delay: 150,
-      onVisible: (el) => {
-        el.querySelector('.roadmap-content')?.classList.add('visible');
-      }
-    });
-
-    // Lightning particles — more dynamic
+    // Lightning particles
     (function createLightning() {
       const container = document.querySelector('.hero-particles');
       if (!container) return;
