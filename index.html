@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightning Habits ⚡ — Earn sats. Build habits. Change lives.</title>
+  <meta name="description" content="A habit tracker powered by Bitcoin Lightning Network that rewards task completion with real sats.">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #12121a;
+      --bg3: #1a1a2e;
+      --text: #e8e8f0;
+      --muted: #8888aa;
+      --accent: #f7931a;
+      --purple: #8b5cf6;
+      --lightning: #fbbf24;
+      --green: #10b981;
+      --pink: #ec4899;
+      --gradient: linear-gradient(135deg, #f7931a, #8b5cf6);
+      --gradient2: linear-gradient(135deg, #8b5cf6, #ec4899);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding: 80px 24px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 50%, rgba(247, 147, 26, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(247, 147, 26, 0.1);
+      border: 1px solid rgba(247, 147, 26, 0.3);
+      color: var(--accent);
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 32px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .hero .subtitle {
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: var(--muted);
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    .hero .cta {
+      display: inline-block;
+      background: var(--gradient);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .hero .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(247, 147, 26, 0.3);
+    }
+
+    /* Sections */
+    section {
+      padding: 100px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 1.15rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* How it works */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+    }
+
+    .step {
+      text-align: center;
+      padding: 32px 24px;
+      background: var(--bg2);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: var(--gradient);
+      border-radius: 12px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .step h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Use Cases */
+    .use-cases {
+      display: grid;
+      gap: 32px;
+    }
+
+    .use-case {
+      background: var(--bg2);
+      border-radius: 20px;
+      padding: 48px;
+      border: 1px solid rgba(255,255,255,0.05);
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 32px;
+      align-items: start;
+      transition: border-color 0.3s;
+    }
+
+    .use-case:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    .use-case-icon {
+      font-size: 3.5rem;
+      line-height: 1;
+    }
+
+    .use-case h3 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .use-case .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+
+    .tag-kids { background: rgba(251, 191, 36, 0.15); color: var(--lightning); }
+    .tag-fitness { background: rgba(16, 185, 129, 0.15); color: var(--green); }
+    .tag-care { background: rgba(236, 72, 153, 0.15); color: var(--pink); }
+
+    .use-case p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .use-case ul {
+      list-style: none;
+      margin-top: 16px;
+    }
+
+    .use-case li {
+      color: var(--muted);
+      padding: 6px 0;
+      padding-left: 24px;
+      position: relative;
+      font-size: 0.95rem;
+    }
+
+    .use-case li::before {
+      content: '⚡';
+      position: absolute;
+      left: 0;
+    }
+
+    /* Tech Stack */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .tech-card {
+      background: var(--bg2);
+      border-radius: 16px;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .tech-emoji {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .tech-card h4 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .tech-card p {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* Roadmap */
+    .roadmap {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .roadmap-item {
+      display: grid;
+      grid-template-columns: 100px 40px 1fr;
+      gap: 0;
+      align-items: start;
+      margin-bottom: 8px;
+    }
+
+    .roadmap-month {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--accent);
+      text-align: right;
+      padding-top: 20px;
+      padding-right: 16px;
+    }
+
+    .roadmap-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .roadmap-dot {
+      width: 16px;
+      height: 16px;
+      background: var(--gradient);
+      border-radius: 50%;
+      margin-top: 22px;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+
+    .roadmap-connector {
+      width: 2px;
+      flex-grow: 1;
+      background: rgba(139, 92, 246, 0.2);
+      min-height: 40px;
+    }
+
+    .roadmap-content {
+      background: var(--bg2);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-left: 16px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .roadmap-content h4 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .roadmap-content p {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .roadmap-difficulty {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--lightning);
+      margin-top: 4px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 60px 24px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    footer p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    footer .motto {
+      font-size: 1.2rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .use-case {
+        grid-template-columns: 1fr;
+        padding: 32px 24px;
+      }
+
+      .use-case-icon {
+        font-size: 2.5rem;
+      }
+
+      .roadmap-item {
+        grid-template-columns: 60px 30px 1fr;
+      }
+
+      .roadmap-month {
+        font-size: 0.75rem;
+      }
+
+      section {
+        padding: 60px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-badge">Built for La Crypta Hackathons 2026</div>
+    <h1>Lightning Habits ⚡</h1>
+    <p class="subtitle">Earn sats. Build habits. Change lives.<br>A habit tracker powered by Bitcoin Lightning that rewards task completion with real sats.</p>
+    <a href="#use-cases" class="cta">Explore the Vision ↓</a>
+  </header>
+
+  <!-- How It Works -->
+  <section>
+    <div class="container">
+      <div class="section-title">
+        <h2>How It Works</h2>
+        <p>Four simple steps from task to sats</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Fund a Wallet</h3>
+          <p>A sponsor — parent, community, or yourself — loads sats into a Lightning wallet</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Set Up Tasks</h3>
+          <p>Create habits and daily tasks with sat rewards attached to each one</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Get Reminded</h3>
+          <p>AI bot sends Duolingo-style reminders. Motivational, persistent, fun.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Complete → Earn ⚡</h3>
+          <p>Finish the task, get verified, receive sats instantly via Lightning</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section id="use-cases" style="background: var(--bg2);">
+    <div class="container">
+      <div class="section-title">
+        <h2>Real Use Cases</h2>
+        <p>Not just another habit tracker — a tool that changes lives</p>
+      </div>
+      <div class="use-cases">
+
+        <div class="use-case">
+          <div class="use-case-icon">🧒</div>
+          <div>
+            <span class="tag tag-kids">Financial Education</span>
+            <h3>Allowance 2.0 — Kids Stack Sats</h3>
+            <p>Parents fund a Lightning wallet. Kids earn sats by completing chores and responsibilities. It's the modern allowance — digital, instant, and teaches financial literacy from day one.</p>
+            <ul>
+              <li>Make the bed, do laundry, homework, wash the car</li>
+              <li>Kids learn to save, spend, and stack sats</li>
+              <li>Parents see everything — full transparency</li>
+              <li>Builds responsibility through real economic incentives</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="use-case">
+          <div class="use-case-icon">💪</div>
+          <div>
+            <span class="tag tag-fitness">Community Health</span>
+            <h3>Exercise & Earn — Healthier Communities</h3>
+            <p>Community pools where members earn sats for working out. Inspired by real conversations at La Crypta about zapping people who exercise. Social accountability meets Lightning rewards.</p>
+            <ul>
+              <li>Community funds a reward pool</li>
+              <li>Members earn sats for verified workouts</li>
+              <li>Integration with fitness trackers (Strava, Apple Health)</li>
+              <li>Nostr zaps for celebrating milestones together</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="use-case">
+          <div class="use-case-icon">🤝</div>
+          <div>
+            <span class="tag tag-care">Assisted Living</span>
+            <h3>Dignity Through Achievement</h3>
+            <p>For people with mental health conditions who struggle with motivation for daily tasks. Family members fund the wallet as support — but instead of just receiving money, the person <strong>earns it</strong> by completing daily life tasks.</p>
+            <ul>
+              <li>Clean the apartment, make the bed, take out trash</li>
+              <li>Help family members with simple tasks</li>
+              <li>Tasks that are genuinely difficult due to lack of motivation</li>
+              <li>Transforms financial support from charity into achievement</li>
+              <li>Preserves dignity — earning, not just asking</li>
+              <li>Small wins create momentum and help with recovery</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section>
+    <div class="container">
+      <div class="section-title">
+        <h2>Tech Stack</h2>
+        <p>Built on Bitcoin-native, privacy-first technologies</p>
+      </div>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <span class="tech-emoji">⚡</span>
+          <div>
+            <h4>Lightning Network</h4>
+            <p>Instant, near-free micro-payments. LNURL for easy withdrawals. NWC for wallet integration. Bolt12 for recurring rewards.</p>
+          </div>
+        </div>
+        <div class="tech-card">
+          <span class="tech-emoji">🔐</span>
+          <div>
+            <h4>Nostr</h4>
+            <p>Decentralized identity & login. Zaps for social rewards. NIP-05 verification. No accounts, no emails.</p>
+          </div>
+        </div>
+        <div class="tech-card">
+          <span class="tech-emoji">🤖</span>
+          <div>
+            <h4>OpenClaw</h4>
+            <p>AI-powered bot for Duolingo-style reminders, notifications about rewards, and smart task scheduling.</p>
+          </div>
+        </div>
+        <div class="tech-card">
+          <span class="tech-emoji">🍬</span>
+          <div>
+            <h4>Cashu</h4>
+            <p>Ecash mints for instant, private micro-rewards. Perfect for kids' wallets — no on-chain fees.</p>
+          </div>
+        </div>
+        <div class="tech-card">
+          <span class="tech-emoji">🗣️</span>
+          <div>
+            <h4>Whisper</h4>
+            <p>Speech-to-text for accessibility. Complete tasks by voice. No screen needed.</p>
+          </div>
+        </div>
+        <div class="tech-card">
+          <span class="tech-emoji">🧠</span>
+          <div>
+            <h4>Local AI (Ollama)</h4>
+            <p>Privacy-first insights and habit analysis. All processing on-device. Your data never leaves.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roadmap -->
+  <section style="background: var(--bg2);">
+    <div class="container">
+      <div class="section-title">
+        <h2>Hackathon Roadmap</h2>
+        <p>8 months, 8 hackathons — each edition builds on the last</p>
+      </div>
+      <div class="roadmap">
+        <div class="roadmap-item">
+          <div class="roadmap-month">MAR</div>
+          <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+          <div class="roadmap-content">
+            <h4>⚡ Foundations</h4>
+            <p>Core Lightning payment flow. Wallet integration. Send and receive sats for task completion.</p>
+            <span class="roadmap-difficulty">⭐ Beginner</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-month">ABR</div>
+          <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+          <div class="roadmap-content">
+            <h4>🔐 Identity</h4>
+            <p>Nostr login. User profiles. NIP-05 verification. Family accounts.</p>
+            <span class="roadmap-difficulty">⭐ Beginner</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-month">MAY</div>
+          <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+          <div class="roadmap-content">
+            <h4>💜 Zaps</h4>
+            <p>Community rewards. Social zapping for fitness milestones. Streak celebrations.</p>
+            <span class="roadmap-difficulty">⭐⭐ Intermediate</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-month">JUN</div>
+          <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+          <div class="roadmap-content">
+            <h4>🛒 Commerce</h4>
+            <p>Marketplace for task templates. Premium features. Sponsor dashboards.</p>
+            <span class="roadmap-difficulty">⭐⭐ Intermediate</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-month">JUL</div>
+          <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+          <div class="roadmap-content">
+            <h4>📸 Media</h4>
+            <p>Photo verification of task completion. AI validates images. Decentralized storage.</p>
+            <span class="roadmap-difficulty">⭐⭐⭐ Advanced</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-month">AGO</div>
+          <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+          <div class="roadmap-content">
+            <h4>🤖 AI Agents</h4>
+            <p>OpenClaw bot for Duolingo-style reminders. AI insights. Automated task verification.</p>
+            <span class="roadmap-difficulty">⭐⭐⭐ Advanced</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-month">SEP</div>
+          <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+          <div class="roadmap-content">
+            <h4>🏗️ Infrastructure</h4>
+            <p>Custom Lightning node. Optimized routing. Cashu mint for instant micro-rewards.</p>
+            <span class="roadmap-difficulty">⭐⭐⭐⭐ Expert</span>
+          </div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-month">OCT</div>
+          <div class="roadmap-line"><div class="roadmap-dot"></div><div class="roadmap-connector"></div></div>
+          <div class="roadmap-content">
+            <h4>🌐 Integration</h4>
+            <p>Full platform launch. All features combined. Kids, fitness, assisted living — one app.</p>
+            <span class="roadmap-difficulty">⭐⭐⭐⭐ Expert</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Built for <strong>La Crypta Lightning Hackathons 2026</strong></p>
+    <p>Powered by Lightning Network · Nostr · OpenClaw · LaWallet</p>
+    <br>
+    <p class="motto">⚡ Bitcoin o Muerte 💀</p>
+  </footer>
+
+</body>
+</html>
