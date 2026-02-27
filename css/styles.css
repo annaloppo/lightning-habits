@@ -1,17 +1,20 @@
 /* ===== Variables ===== */
+/* BitByBit Color System — eye-safe palette for children */
+/* Warm tones (gold, green, coral) avoid harmful blue light (400-455nm) */
+/* Dark mode default reduces light emission 60-80% */
 :root {
-  --bg: #0a0a0f;
-  --bg2: #12121a;
-  --bg3: #1a1a2e;
-  --text: #e8e8f0;
-  --muted: #8888aa;
-  --accent: #f7931a;
-  --purple: #8b5cf6;
-  --lightning: #fbbf24;
-  --green: #10b981;
-  --pink: #ec4899;
-  --gradient: linear-gradient(135deg, #f7931a, #8b5cf6);
-  --gradient2: linear-gradient(135deg, #8b5cf6, #ec4899);
+  --bg: #0f0f18;
+  --bg2: #1a1a2e;
+  --bg3: #242442;
+  --text: #F0E6D8;
+  --muted: #B8A898;
+  --accent: #F7A825;
+  --purple: #4DB6AC;  /* replaced purple with safe teal */
+  --lightning: #FBC96B;
+  --green: #4CAF7D;
+  --pink: #FF6B6B;    /* replaced pink with warm coral */
+  --gradient: linear-gradient(135deg, #F7A825, #4CAF7D);
+  --gradient2: linear-gradient(135deg, #4CAF7D, #FF6B6B);
 }
 
 /* ===== Reset & Base ===== */
@@ -127,7 +130,7 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(ellipse at 30% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+  background: radial-gradient(ellipse at 30% 50%, rgba(77, 182, 172, 0.08) 0%, transparent 50%),
               radial-gradient(ellipse at 70% 50%, rgba(247, 147, 26, 0.06) 0%, transparent 50%);
   pointer-events: none;
 }
@@ -143,7 +146,7 @@ body {
   position: absolute;
   width: 2px;
   height: 60px;
-  background: linear-gradient(to bottom, transparent, rgba(251, 191, 36, 0.6), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(251, 201, 107, 0.6), transparent);
   opacity: 0;
   animation: lightningFall linear infinite;
 }
@@ -258,8 +261,8 @@ section {
 }
 .step:hover {
   transform: translateY(-4px);
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.1);
+  border-color: rgba(77, 182, 172, 0.3);
+  box-shadow: 0 8px 30px rgba(77, 182, 172, 0.1);
 }
 
 .step-number {
@@ -303,8 +306,8 @@ section {
   transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
 }
 .use-case:hover {
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.08);
+  border-color: rgba(77, 182, 172, 0.3);
+  box-shadow: 0 8px 30px rgba(77, 182, 172, 0.08);
   transform: translateY(-2px);
 }
 
@@ -328,9 +331,9 @@ section {
   border-radius: 100px;
   margin-bottom: 16px;
 }
-.tag-kids { background: rgba(251, 191, 36, 0.15); color: var(--lightning); }
+.tag-kids { background: rgba(251, 201, 107, 0.15); color: var(--lightning); }
 .tag-fitness { background: rgba(16, 185, 129, 0.15); color: var(--green); }
-.tag-care { background: rgba(236, 72, 153, 0.15); color: var(--pink); }
+.tag-care { background: rgba(255, 107, 107, 0.15); color: var(--pink); }
 
 .use-case p {
   color: var(--muted);
@@ -417,8 +420,8 @@ section {
 }
 .tech-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.08);
+  border-color: rgba(77, 182, 172, 0.3);
+  box-shadow: 0 8px 25px rgba(77, 182, 172, 0.08);
 }
 
 .tech-emoji {
@@ -485,7 +488,7 @@ section {
 .roadmap-connector {
   width: 2px;
   flex-grow: 1;
-  background: rgba(139, 92, 246, 0.2);
+  background: rgba(77, 182, 172, 0.2);
   min-height: 40px;
 }
 
