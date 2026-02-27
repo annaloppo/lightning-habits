@@ -367,7 +367,7 @@
   </footer>
 
   <script>
-    // Floating navbar — show after scrolling past hero
+    // Floating navbar
     const navbar = document.querySelector('.navbar');
     const hero = document.querySelector('.hero');
     const navObserver = new IntersectionObserver(([entry]) => {
@@ -375,29 +375,121 @@
     }, { threshold: 0.1 });
     navObserver.observe(hero);
 
-    // Scroll animations
-    const fadeEls = document.querySelectorAll('.fade-in');
-    const fadeObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          fadeObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-    fadeEls.forEach(el => fadeObserver.observe(el));
+    // Generic scroll observer
+    function observeElements(selector, opts = {}) {
+      const els = document.querySelectorAll(selector);
+      const ob = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (opts.delay) {
+              const i = Array.from(els).indexOf(entry.target);
+              entry.target.style.transitionDelay = (i * (opts.delay)) + 'ms';
+            }
+            entry.target.classList.add('visible');
+            if (opts.onVisible) opts.onVisible(entry.target);
+            ob.unobserve(entry.target);
+          }
+        });
+      }, { threshold: opts.threshold || 0.1, rootMargin: opts.rootMargin || '0px 0px -40px 0px' });
+      els.forEach(el => ob.observe(el));
+    }
 
-    // Lightning particles
+    // Basic fade-ins (section titles, how-it-works steps)
+    observeElements('.fade-in');
+
+    // Use Cases — alternating slide directions
+    document.querySelectorAll('.use-case').forEach((card, i) => {
+      card.classList.remove('fade-in');
+      card.classList.add(i % 2 === 0 ? 'slide-left' : 'slide-right');
+    });
+    observeElements('.use-case.slide-left, .use-case.slide-right');
+
+    // Why Lightning — scale-in with stagger
+    document.querySelectorAll('.why-card').forEach(card => {
+      card.classList.remove('fade-in');
+      card.classList.add('scale-in');
+    });
+    observeElements('.why-card.scale-in', { delay: 100 });
+
+    // Why Lightning — count-up stats
+    function animateStat(el) {
+      const text = el.textContent.trim();
+      // Simple typewriter for stat text
+      el.style.opacity = '0';
+      setTimeout(() => {
+        el.style.opacity = '1';
+        el.style.transition = 'opacity 0.3s';
+      }, 200);
+    }
+    document.querySelectorAll('.why-card.scale-in').forEach(card => {
+      const stat = card.querySelector('.why-stat');
+      if (stat) {
+        const origText = stat.textContent;
+        const ob = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting) {
+            stat.textContent = '';
+            let idx = 0;
+            const interval = setInterval(() => {
+              idx++;
+              stat.textContent = origText.substring(0, idx);
+              if (idx >= origText.length) clearInterval(interval);
+            }, 40);
+            ob.unobserve(entry.target);
+          }
+        }, { threshold: 0.3 });
+        ob.observe(card);
+      }
+    });
+
+    // Tech Stack — staggered grid
+    document.querySelectorAll('.tech-card').forEach(card => {
+      card.classList.remove('fade-in');
+      card.classList.add('stagger-in');
+    });
+    observeElements('.tech-card.stagger-in', { delay: 120 });
+
+    // Tech Stack — subtle parallax
+    const techSection = document.getElementById('tech-stack');
+    if (techSection) {
+      window.addEventListener('scroll', () => {
+        const rect = techSection.getBoundingClientRect();
+        const progress = -rect.top / window.innerHeight;
+        if (progress > -1 && progress < 2) {
+          techSection.querySelectorAll('.tech-card').forEach((card, i) => {
+            const offset = (progress * 15) * (i % 2 === 0 ? 1 : -1);
+            card.style.transform = `translateY(${card.classList.contains('visible') ? offset : 40}px)`;
+          });
+        }
+      }, { passive: true });
+    }
+
+    // Roadmap — slide-in content cards + animated connectors
+    document.querySelectorAll('.roadmap-content').forEach(content => {
+      content.classList.add('slide-right-rm');
+    });
+    document.querySelectorAll('.roadmap-item').forEach(item => {
+      item.classList.remove('fade-in');
+    });
+    observeElements('.roadmap-item', {
+      delay: 150,
+      onVisible: (el) => {
+        el.querySelector('.roadmap-content')?.classList.add('visible');
+      }
+    });
+
+    // Lightning particles — more dynamic
     (function createLightning() {
       const container = document.querySelector('.hero-particles');
       if (!container) return;
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < 20; i++) {
         const bolt = document.createElement('div');
         bolt.className = 'lightning-bolt';
         bolt.style.left = Math.random() * 100 + '%';
-        bolt.style.animationDuration = (3 + Math.random() * 4) + 's';
+        bolt.style.animationDuration = (2 + Math.random() * 4) + 's';
         bolt.style.animationDelay = (Math.random() * 5) + 's';
-        bolt.style.height = (40 + Math.random() * 60) + 'px';
+        bolt.style.height = (30 + Math.random() * 80) + 'px';
+        bolt.style.width = (1 + Math.random() * 2) + 'px';
+        bolt.style.opacity = (0.3 + Math.random() * 0.5);
         container.appendChild(bolt);
       }
     })();
