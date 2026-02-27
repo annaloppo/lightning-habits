@@ -478,15 +478,13 @@
     (function createLightning() {
       const container = document.querySelector('.hero-particles');
       if (!container) return;
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 12; i++) {
         const bolt = document.createElement('div');
         bolt.className = 'lightning-bolt';
         bolt.style.left = Math.random() * 100 + '%';
-        bolt.style.animationDuration = (2 + Math.random() * 4) + 's';
+        bolt.style.animationDuration = (3 + Math.random() * 4) + 's';
         bolt.style.animationDelay = (Math.random() * 5) + 's';
-        bolt.style.height = (30 + Math.random() * 80) + 'px';
-        bolt.style.width = (1 + Math.random() * 2) + 'px';
-        bolt.style.setProperty('--bolt-opacity', (0.3 + Math.random() * 0.5));
+        bolt.style.height = (40 + Math.random() * 60) + 'px';
         container.appendChild(bolt);
       }
     })();

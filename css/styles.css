@@ -141,19 +141,17 @@ body {
 }
 .lightning-bolt {
   position: absolute;
-  top: -80px;
   width: 2px;
   height: 60px;
-  background: linear-gradient(to bottom, transparent, rgba(251, 191, 36, 0.8), rgba(247, 147, 26, 0.6), transparent);
-  border-radius: 2px;
-  filter: blur(0.5px);
+  background: linear-gradient(to bottom, transparent, rgba(251, 191, 36, 0.6), transparent);
+  opacity: 0;
   animation: lightningFall linear infinite;
 }
 @keyframes lightningFall {
-  0% { opacity: 0; transform: translateY(0); }
-  5% { opacity: var(--bolt-opacity, 0.6); }
-  85% { opacity: var(--bolt-opacity, 0.6); }
-  100% { opacity: 0; transform: translateY(calc(90vh + 100px)); }
+  0% { opacity: 0; transform: translateY(-60px); }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { opacity: 0; transform: translateY(calc(90vh + 60px)); }
 }
 
 .hero-badge {
