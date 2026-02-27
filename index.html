@@ -486,7 +486,7 @@
         bolt.style.animationDelay = (Math.random() * 5) + 's';
         bolt.style.height = (30 + Math.random() * 80) + 'px';
         bolt.style.width = (1 + Math.random() * 2) + 'px';
-        bolt.style.opacity = (0.3 + Math.random() * 0.5);
+        bolt.style.setProperty('--bolt-opacity', (0.3 + Math.random() * 0.5));
         container.appendChild(bolt);
       }
     })();
